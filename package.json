@@ -8,7 +8,7 @@
     "name": "Wesley",
     "email": "service@kelepool.com"
   },
-  "repository": "https://github.com/kelepooloffice/docs.kelepool.com",
+  "repository": "https://github.com/TBirdAI/docs.tbird.ai",
   "scripts": {
     "dev": "vuepress dev src",
     "build": "vuepress build src",

@@ -6,7 +6,7 @@ Cola Mining Pool has opened all ETH2.0 revenue query interfaces. Developers can 
 
 [Kele Pool Mainnet API：https://api.kelepool.com](https://api.kelepool.com)
 
-[Kele Pool Ropsten API：https://test-api.kelepool.com](https://test-api.kelepool.com)
+[Kele Pool Goerli API：https://test-api.kelepool.com](https://test-api.kelepool.com)
 
 > Generic request returns result:
 > - `code` : an integer number, equal to 0 for success, greater than 0 for failure
@@ -38,7 +38,8 @@ Only for test : authority_key & token
 }
 ```
 
-### 3. Python Sample code
+
+### 3.Python Sample code
 ```python
 
 import hashlib
@@ -46,30 +47,128 @@ import hmac
 import requests
 
 
-url = 'https://test-api.kelepool.com/eth2/v2/miner/income/query'
+url = 'https://test-api.kelepool.com/eth2/v2/miner/dashboard?address=0xf48b98bbeeb81033a227f576da98a32c3a2d8515'
 params = {
-    "address":"0xB49F98416aa4B158c2e752FD8031Fb295D330B22"
+    'address':'0xf48b98bbeeb81033a227f576da98a32c3a2d8515'
 }
+
+# url = 'https://test-api.kelepool.com/eth2/v2/partner/validator'
+# params = {
+
+# }
 
 sign_str = '&'.join(['%s=%s' % (k, params[k]) for k in sorted(params)])
 
-authority_key='2fb8098e1xxxxxxxxxxa874f572643b8ed'
+authority_key='dccc6ce732fe9011ee4e12b2e0de8ecbe743f630f3ff02bceb23052d9afa692d50540d6221f095427f903db80f781dd6cfaef8c6678ad5bbcc74475cd76cf629'
+token='eyJ0eXAiOiJqd3QiLCJhbGciOiJIUzI1NiJ9.eyJ0eXBlIjoiZnVsbCIsIm9wZW5pZCI6Ik9uZUtleSIsInZlcnNpb24iOiIwIiwiZXhwIjoxODM3MDYzMjE0fQ.Z22fUeKbo6AmrsvvJ2nrrDjXQCcMwFd7GtIIAGUe6DU'
 
 sign=hmac.new(authority_key.encode('utf-8'), sign_str.encode('utf-8'), digestmod=hashlib.blake2b).hexdigest()
-
-token='eyJ0eXxxxxxxxxxxxxxxx36jpgZRWc'
-
-headers = {'Content-Type': 'application/json', 'Accept':'application/json',
+headers = {
+'Content-Type': 'application/json', 
+'Accept':'application/json',
 'Kele-ThirdParty-Authority':token,
 'Kele-ThirdParty-Sign':sign
 }
 
 r_json = requests.get(url,params=params,headers=headers)
-print(r_json.text)
-
+print()
+print("paramters: "+sign_str)
+print()
+print("signature: "+sign)
+print()
+print("response: "+r_json.text)
 
 ```
 
+### 4.NodeJs Sample code
+
+- yarn add sodium-universal
+- yarn add request
+
+```javascript
+
+
+var { sodium_malloc, sodium_memzero } = require('sodium-universal/memory')
+var { crypto_generichash, crypto_generichash_batch } = require('sodium-universal/crypto_generichash')
+
+// calculate signature
+function hmac (data, key) {
+  var mac = Buffer.alloc(64)
+  var scratch = sodium_malloc(128 * 3)
+  var hmacKey = scratch.subarray(128 * 0, 128 * 1)
+  var outerKeyPad = scratch.subarray(128 * 1, 128 * 2)
+  var innerKeyPad = scratch.subarray(128 * 2, 128 * 3)
+  if (key.byteLength > 128) {
+    crypto_generichash(hmacKey.subarray(0, 64), key)
+    sodium_memzero(hmacKey.subarray(64))
+  } else {
+    hmacKey.set(key)
+    sodium_memzero(hmacKey.subarray(key.byteLength))
+  }
+  for (var i = 0; i < hmacKey.byteLength; i++) {
+    outerKeyPad[i] = 0x5c ^ hmacKey[i]
+    innerKeyPad[i] = 0x36 ^ hmacKey[i]
+  }
+  sodium_memzero(hmacKey)
+  crypto_generichash_batch(mac, [innerKeyPad].concat(data))
+  sodium_memzero(innerKeyPad)
+  crypto_generichash_batch(mac, [outerKeyPad].concat(mac))
+  sodium_memzero(outerKeyPad)
+  return mac.toString('hex')
+}
+
+// contact paramaters
+function combines(data){
+  var builder = []
+  Object.entries(data).sort((a,b)=> (a[0].localeCompare(b[0]) || a[1].localeCompare(b[1]))).forEach((item,index)=>{
+    builder.push(item[0] +'=' + item[1])
+  })
+  return builder.join("&")
+}
+
+// request
+function execute(){
+
+  var params = {
+    'address':'0xf48b98bbeeb81033a227f576da98a32c3a2d8515'
+  }
+  var url = 'https://test-api.kelepool.com/eth2/v2/miner/dashboard?address=0xf48b98bbeeb81033a227f576da98a32c3a2d8515'
+
+  // var url = 'https://test-api.kelepool.com/eth2/v2/partner/validator'
+  // var params = {}
+
+  var authority_key='dccc6ce732fe9011ee4e12b2e0de8ecbe743f630f3ff02bceb23052d9afa692d50540d6221f095427f903db80f781dd6cfaef8c6678ad5bbcc74475cd76cf629'
+  var token='eyJ0eXAiOiJqd3QiLCJhbGciOiJIUzI1NiJ9.eyJ0eXBlIjoiZnVsbCIsIm9wZW5pZCI6Ik9uZUtleSIsInZlcnNpb24iOiIwIiwiZXhwIjoxODM3MDYzMjE0fQ.Z22fUeKbo6AmrsvvJ2nrrDjXQCcMwFd7GtIIAGUe6DU'
+  var parameters = combines(params)
+  var key = Buffer.from(authority_key,'utf8')
+  var data = Buffer.from(parameters,'utf8')
+  var signature = hmac(data, key)
+
+  console.log("paramaters: "+parameters)
+  console.log("signature: "+signature)
+
+  const request = require('request');
+  request({
+    url: url,
+    headers: {
+      'Content-Type': 'application/json', 
+      'Accept':'application/json',
+      'Kele-ThirdParty-Authority':token,
+      'Kele-ThirdParty-Sign':signature
+    }
+  }, (error, response, body) => {
+    if (!error && response.statusCode == 200) {
+      const data = JSON.parse(body);
+      console.log(data);
+
+    }
+  });
+}
+
+
+execute();
+
+```
 
 ## User Address Registration
 #### POST [/user/v2/anonymouslogin](https://test-api.kelepool.com/user/v2/anonymouslogin)
@@ -184,6 +283,7 @@ https://test-api.kelepool.com/eth2/v2/global
 > - `whale_min_amount` : Minimum stake amount for large amount (ETH)
 > - `retail_min_amount` : Small minimum stake amount (ETH)
 > - `retail_deposit_far` : How much ETH is left for the small pledge to create a validator
+> - `withdraw_predicted_hour` : How long will the withdrawal take to the account
 > - `validator_alive_predicted_hour` : how many hours after the validator is created by the pledge now, the validator will take effect
 ```json
 {
@@ -202,6 +302,7 @@ https://test-api.kelepool.com/eth2/v2/global
         "whale_min_amount":32,
         "retail_min_amount":0.01,
         "retail_deposit_far":27.6,
+        "withdraw_predicted_hour":216,
         "validator_alive_predicted_hour":24
     }
 }
@@ -385,14 +486,14 @@ https://test-api.kelepool.com/eth2/v2/validator/keypair
             "withdrawal_credentials":"001ae74d19004b360d02d411795cee1451dc20679f13a13aafce7de2448b60cb",
             "signature":"a61e5ed96b5b22ec9da92cf3f09c24cf9230ec1db99918e9dedfc9440de473f64b7520b5fb40558d0bc9f009dd20731917c3dbf6b3cfd98b48377a190d9e2959df3d2fa2dcec9c09e8be420accc9daa25301d4a2ce1636a5413ac066e7a4628f",
             "deposit_data_root":"ebb84a75e241501cc64c4e42dd3cdb7a2f72e6af60ab828b2fb246905eb629e5",
-            "network_name":"ropsten"
+            "network_name":"Goerli"
         },
         {
             "pubkey":"83909737754d15dd3ad1281a3f0e62baa64d3c0abb3ed218c3baf7ff250058a24fe1143a5243c3b015e3f93ed6af1e18",
             "withdrawal_credentials":"001ae74d19004b360d02d411795cee1451dc20679f13a13aafce7de2448b60cb",
             "signature":"b95af475d67e8438e49cfaad12dacd789c705938fd6a8fee93a1a170ef6322c2cf37c643d1d010b23734c04e9028b58d034435dd6c9f19610090bfdefb7522c69e99b0a7830f6d967f1d07e3ff30128c8b516d40232e5595ac91d746420da993",
             "deposit_data_root":"f08ca526395300d60ccc6db28d931ba129944f44d4bb92c773424e120dde222b",
-            "network_name":"ropsten"
+            "network_name":"Goerli"
         }
     ]
 }

@@ -1,6 +1,6 @@
 # Documentation Hub
 
-Kele Pool Documentation Hub - Features Whitepaper, FAQs, Technical Docs, Guides and more. Is written in [Vuepress](https://v2.vuepress.vuejs.org/guide/#how-it-works)
+Tbird Documentation Hub - Features Whitepaper, FAQs, Technical Docs, Guides and more. Is written in [Vuepress](https://v2.vuepress.vuejs.org/guide/#how-it-works)
 
 We welcome all contributions! Please refer to our [ contribution guidelines ]( ./CONTRIBUTING.md ).
 
