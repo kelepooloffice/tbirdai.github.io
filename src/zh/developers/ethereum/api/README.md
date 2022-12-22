@@ -6,7 +6,7 @@
 
 [可乐矿池Mainnet主网API：https://api.kelepool.com](https://api.kelepool.com)
 
-[可乐矿池Ropsten测试网API：https://test-api.kelepool.com](https://test-api.kelepool.com)
+[可乐矿池Goerli测试网API：https://test-api.kelepool.com](https://test-api.kelepool.com)
 
 > 通用的请求返回结果：
 > - `code` ：整型数字，等于0表示成功，大于0表示失败
@@ -46,26 +46,128 @@ import hmac
 import requests
 
 
-url = 'https://test-api.kelepool.com/eth2/v2/miner/income/query'
+url = 'https://test-api.kelepool.com/eth2/v2/miner/dashboard?address=0xf48b98bbeeb81033a227f576da98a32c3a2d8515'
 params = {
-    "address":"0xB49F98416aa4B158c2e752FD8031Fb295D330B22"
+    'address':'0xf48b98bbeeb81033a227f576da98a32c3a2d8515'
 }
+
+# url = 'https://test-api.kelepool.com/eth2/v2/partner/validator'
+# params = {
+
+# }
 
 sign_str = '&'.join(['%s=%s' % (k, params[k]) for k in sorted(params)])
 
-authority_key='2fb8098e1xxxxxxxxxxa874f572643b8ed'
+authority_key='dccc6ce732fe9011ee4e12b2e0de8ecbe743f630f3ff02bceb23052d9afa692d50540d6221f095427f903db80f781dd6cfaef8c6678ad5bbcc74475cd76cf629'
+token='eyJ0eXAiOiJqd3QiLCJhbGciOiJIUzI1NiJ9.eyJ0eXBlIjoiZnVsbCIsIm9wZW5pZCI6Ik9uZUtleSIsInZlcnNpb24iOiIwIiwiZXhwIjoxODM3MDYzMjE0fQ.Z22fUeKbo6AmrsvvJ2nrrDjXQCcMwFd7GtIIAGUe6DU'
 
 sign=hmac.new(authority_key.encode('utf-8'), sign_str.encode('utf-8'), digestmod=hashlib.blake2b).hexdigest()
-
-token='eyJ0eXxxxxxxxxxxxxxxx36jpgZRWc'
-
-headers = {'Content-Type': 'application/json', 'Accept':'application/json',
+headers = {
+'Content-Type': 'application/json', 
+'Accept':'application/json',
 'Kele-ThirdParty-Authority':token,
 'Kele-ThirdParty-Sign':sign
 }
 
 r_json = requests.get(url,params=params,headers=headers)
-print(r_json.text)
+print()
+print("paramters: "+sign_str)
+print()
+print("signature: "+sign)
+print()
+print("response: "+r_json.text)
+
+```
+
+### 4.NodeJs示例代码
+
+安装下面两个库，然后直接运行代码即可。
+
+- yarn add sodium-universal
+- yarn add request
+
+```javascript
+
+
+var { sodium_malloc, sodium_memzero } = require('sodium-universal/memory')
+var { crypto_generichash, crypto_generichash_batch } = require('sodium-universal/crypto_generichash')
+
+// 计算消息签名
+function hmac (data, key) {
+  var mac = Buffer.alloc(64)
+  var scratch = sodium_malloc(128 * 3)
+  var hmacKey = scratch.subarray(128 * 0, 128 * 1)
+  var outerKeyPad = scratch.subarray(128 * 1, 128 * 2)
+  var innerKeyPad = scratch.subarray(128 * 2, 128 * 3)
+  if (key.byteLength > 128) {
+    crypto_generichash(hmacKey.subarray(0, 64), key)
+    sodium_memzero(hmacKey.subarray(64))
+  } else {
+    hmacKey.set(key)
+    sodium_memzero(hmacKey.subarray(key.byteLength))
+  }
+  for (var i = 0; i < hmacKey.byteLength; i++) {
+    outerKeyPad[i] = 0x5c ^ hmacKey[i]
+    innerKeyPad[i] = 0x36 ^ hmacKey[i]
+  }
+  sodium_memzero(hmacKey)
+  crypto_generichash_batch(mac, [innerKeyPad].concat(data))
+  sodium_memzero(innerKeyPad)
+  crypto_generichash_batch(mac, [outerKeyPad].concat(mac))
+  sodium_memzero(outerKeyPad)
+  return mac.toString('hex')
+}
+
+// 拼接请求参数
+function combines(data){
+  var builder = []
+  Object.entries(data).sort((a,b)=> (a[0].localeCompare(b[0]) || a[1].localeCompare(b[1]))).forEach((item,index)=>{
+    builder.push(item[0] +'=' + item[1])
+  })
+  return builder.join("&")
+}
+
+// 发送请求
+function execute(){
+
+  var params = {
+    'address':'0xf48b98bbeeb81033a227f576da98a32c3a2d8515'
+  }
+  var url = 'https://test-api.kelepool.com/eth2/v2/miner/dashboard?address=0xf48b98bbeeb81033a227f576da98a32c3a2d8515'
+
+  // var url = 'https://test-api.kelepool.com/eth2/v2/partner/validator'
+  // var params = {}
+
+  var authority_key='dccc6ce732fe9011ee4e12b2e0de8ecbe743f630f3ff02bceb23052d9afa692d50540d6221f095427f903db80f781dd6cfaef8c6678ad5bbcc74475cd76cf629'
+  var token='eyJ0eXAiOiJqd3QiLCJhbGciOiJIUzI1NiJ9.eyJ0eXBlIjoiZnVsbCIsIm9wZW5pZCI6Ik9uZUtleSIsInZlcnNpb24iOiIwIiwiZXhwIjoxODM3MDYzMjE0fQ.Z22fUeKbo6AmrsvvJ2nrrDjXQCcMwFd7GtIIAGUe6DU'
+  var parameters = combines(params)
+  var key = Buffer.from(authority_key,'utf8')
+  var data = Buffer.from(parameters,'utf8')
+  var signature = hmac(data, key)
+
+  console.log("paramaters: "+parameters)
+  console.log("signature: "+signature)
+
+  const request = require('request');
+  request({
+    url: url,
+    headers: {
+      'Content-Type': 'application/json', 
+      'Accept':'application/json',
+      'Kele-ThirdParty-Authority':token,
+      'Kele-ThirdParty-Sign':signature
+    }
+  }, (error, response, body) => {
+    if (!error && response.statusCode == 200) {
+      const data = JSON.parse(body);
+      console.log(data);
+
+    }
+  });
+}
+
+
+execute();
 
 ```
 
@@ -182,6 +284,7 @@ https://test-api.kelepool.com/eth2/v2/global
 > - `whale_min_amount` ：大额最低质押数量（ETH）
 > - `retail_min_amount` ：小额最低质押数量（ETH）
 > - `retail_deposit_far` ：小额质押还差多少ETH创建验证节点
+> - `withdraw_predicted_hour` : ETH2.0正式上线提现功能后，提款后多少小时后能到账
 > - `validator_alive_predicted_hour` ：现在质押创建验证节点后，多少小时后验证节点生效
 ```json
 {
@@ -200,6 +303,7 @@ https://test-api.kelepool.com/eth2/v2/global
         "whale_min_amount":32,
         "retail_min_amount":0.01,
         "retail_deposit_far":27.6,
+        "withdraw_predicted_hour":216,
         "validator_alive_predicted_hour":24
     }
 }
@@ -383,14 +487,154 @@ https://test-api.kelepool.com/eth2/v2/validator/keypair
             "withdrawal_credentials":"001ae74d19004b360d02d411795cee1451dc20679f13a13aafce7de2448b60cb",
             "signature":"a61e5ed96b5b22ec9da92cf3f09c24cf9230ec1db99918e9dedfc9440de473f64b7520b5fb40558d0bc9f009dd20731917c3dbf6b3cfd98b48377a190d9e2959df3d2fa2dcec9c09e8be420accc9daa25301d4a2ce1636a5413ac066e7a4628f",
             "deposit_data_root":"ebb84a75e241501cc64c4e42dd3cdb7a2f72e6af60ab828b2fb246905eb629e5",
-            "network_name":"ropsten"
+            "network_name":"Goerli"
         },
         {
             "pubkey":"83909737754d15dd3ad1281a3f0e62baa64d3c0abb3ed218c3baf7ff250058a24fe1143a5243c3b015e3f93ed6af1e18",
             "withdrawal_credentials":"001ae74d19004b360d02d411795cee1451dc20679f13a13aafce7de2448b60cb",
             "signature":"b95af475d67e8438e49cfaad12dacd789c705938fd6a8fee93a1a170ef6322c2cf37c643d1d010b23734c04e9028b58d034435dd6c9f19610090bfdefb7522c69e99b0a7830f6d967f1d07e3ff30128c8b516d40232e5595ac91d746420da993",
             "deposit_data_root":"f08ca526395300d60ccc6db28d931ba129944f44d4bb92c773424e120dde222b",
-            "network_name":"ropsten"
+            "network_name":"Goerli"
+        }
+    ]
+}
+```
+
+
+
+## 合作商质押总览
+#### GET [/eth2/v2/partner/dashboard](https://test-api.kelepool.com/eth2/v2/partner/dashboard)
+
+> 请求参数：
+> - 无
+
+```bash
+https://test-api.kelepool.com/eth2/v2/partner/dashboard
+```
+
+> 请求返回值：
+> - `total_amount` ：质押总数量（ETH）
+> - `staked_amount` ：已生效数量（ETH）
+> - `staking_amount` ：待生效数量（ETH）
+> - `ongoing_amount` ：待提款数量（ETH）
+> - `total_reward` ：总收益（ETH）
+> - `total_validaters` ：总验证节点数量
+> - `unactived_validater` ：待生效节点数量
+> - `actived_validater` ：已生效节点数量
+> - `closed_validater` ：已关闭节点数量
+```json
+{
+    "code":0,
+    "message":"success",
+    "data":{
+        "staking":{
+            "total_amount":173.3,
+            "staked_amount":173.23,
+            "staking_amount":0.07,
+            "ongoing_amount":0,
+            "total_reward":0.82885946,
+        },
+        "validater":{
+            "total_validaters":8,
+            "unactived_validater":1,
+            "actived_validater":7,
+            "closed_validater":0
+        }
+    }
+}
+```
+
+
+## 合作商收益历史列表
+#### GET [/eth2/v2/partner/income](https://test-api.kelepool.com/eth2/v2/partner/income)
+
+> 请求参数：
+> - 无
+
+```bash
+https://test-api.kelepool.com/eth2/v2/partner/income
+```
+
+> 请求返回值：
+> - `date` ：分红日期
+> - `reward` ：当代产生的收益
+> - `balance` ：当日账户总余额
+```json
+{
+    "code":0,
+    "message":"success",
+    "data":[
+        {
+            "date":"2022-07-09 00:00:00",
+            "reward":0.0172946,
+            "deposit":173.3,
+            "balance":174.12885933
+        },
+        {
+            "date":"2022-07-08 00:00:00",
+            "reward":0.03071118,
+            "deposit":173.3,
+            "balance":174.11156473
+        }
+    ]
+}
+```
+
+
+
+## 合作商验证节点列表
+#### GET [/eth2/v2/partner/validator](https://test-api.kelepool.com/eth2/v2/partner/validator)
+
+> 请求参数：
+> - 无
+
+```bash
+https://test-api.kelepool.com/eth2/v2/partner/validator
+```
+
+> 请求返回值：
+> - `identifer` ：验证节点编号（验证节点生效后才有）
+> - `public_key` ：验证节点公钥
+> - `amount` ：质押数量
+> - `status` ：节点状态 1：未生效，2：已生效，5：已退出
+> - `effective_time` ：生效时间，格式：%Y-%m-%d %H:%M:%S，未生效时为null
+> - `address` ETH1存款地址
+> - `deposit_credentials` ：ETH2提款凭证
+> - `type` ：质押账户类型 0：小额质押，1：大额质押
+```json
+{
+    "code":0,
+    "message":"success",
+    "data":[
+        {
+            "identifer":0,
+            "public_key":"852bf5000e370c1baa849defefc30a99c76ac1b41d2991b39e3f631bac3d11f9cbb961d3b17d5c4255137dc902dbbb6f",
+            "amount":0.07,
+            "status":1,
+            "effective_time":null,
+            "address":"0x5dd3bd08cbc8498c8640abc26d19480219bb0606",
+            "deposit_credentials":"",
+            "type":0
+        },
+        {
+            "identifer":118838,
+            "public_key":"8333ce3b794a6a4fd5045f2853884aef34f1a9a3aaf4dcf09af474e67d01865ae5e7e23f77dac7e41313d665afbe5a12",
+            "amount":32,
+            "status":2,
+            "effective_time":"2022-06-10 13:06:59",
+            "address":"0x5dd3bd08cbc8498c8640abc26d19480219bb0606",
+            "deposit_credentials":"003283e7b0701bd85c8aea1fb70021571a4732ba965c0309d4ea54b4dc26707d",
+            "type":1
+        },
+        {
+            "identifer":119856,
+            "public_key":"b7701b5a7dd2ceccd7f51daef59dbc74fb2273f2682df98feedb89464b4ff07f857707378f16677e5b80ef1b6257c582",
+            "amount":32,
+            "status":2,
+            "effective_time":"2022-06-10 13:06:59",
+            "address":"0x5dd3bd08cbc8498c8640abc26d19480219bb0606",
+            "deposit_credentials":"003283e7b0701bd85c8aea1fb70021571a4732ba965c0309d4ea54b4dc26707d",
+            "type":1
         }
     ]
 }
