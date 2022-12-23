@@ -1,5 +1,3 @@
-# Table of contents
-
 ## 入门教程 <a href="#pow" id="pow"></a>
 
 * [📘 配置通知渠道](README.md)
