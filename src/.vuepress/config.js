@@ -39,7 +39,7 @@ module.exports = {
   theme: defaultTheme({
     docsDir: 'src',
     docsBranch: 'main',
-    repo: 'kelepool/docs.kelepool.com',
+    repo: 'tbirdai/docs.tbird.ai',
     logo: '/images/logo.png',
     colorMode:'light',
     colorModeSwitch:false,
@@ -70,7 +70,7 @@ module.exports = {
           },
           {
             text: 'Website',
-            link: 'https://www.kelepool.com'
+            link: 'https://www.tbird.ai'
           },
         ],
         sidebar:{
@@ -78,79 +78,23 @@ module.exports = {
             {
               text: 'Guides',
               children: [
-              {
-                    text: '💰Staking',
-                    collapsible: true,
-                    children:[
-                      '/en/guides/staking/beginner-guide/stake-amount-32-eth.md',
-                      '/en/guides/staking/beginner-guide/stake-amount-32-eth-1.md',
-                    ]
-                  }, {
-                    text: '⛏Mining',
-                    collapsible: true,
-                    children:[
-                      '/en/guides/pow/beginner-guide/1account-registration-and-login.md',
-                      '/en/guides/pow/beginner-guide/2add-and-change-sub-accounts.md',
-                      '/en/guides/pow/beginner-guide/3check-earnings-and-payment-status.md',
-                      '/en/guides/pow/beginner-guide/4check-hashrate-and-worker-status.md',
-                      '/en/guides/pow/beginner-guide/5create-edit-and-delete-observer-addresses.md',
-                      '/en/guides/pow/beginner-guide/7set-hashrate-alert.md',
-                      '/en/guides/pow/beginner-guide/8set-payment-address.md',
-                      '/en/guides/pow/beginner-guide/9supported-currencies-tokens.md',
-                      '/en/guides/pow/beginner-guide/6invite-friends-to-get-rewards.md',
-                    ]
-                  },{
-                    text: '🔐Anonymous Mining',
-                    link: '/en/guides/anonymous-mining.md',
-                  },
               ],
             },
           ],
           '/en/announcements/': [
             {
               text: 'Announcements',
-              children: ['/en/announcements/README.md',
-                         '/en/announcements/20220831.md'
+              children: [
                         ],
             },
           ],
           '/en/wiki/': [
             {
               text: 'Wiki',
-              children: ['/en/wiki/pos/staking-intro.md',
-                         '/en/wiki/pos/staking-guide.md',
-                         '/en/wiki/pos/staking-difference.md',
-                         '/en/wiki/pos/kelepool.md',
-                         '/en/wiki/pos/merge.md',
-                         '/en/wiki/pos/fork.md'
-                        ],
+              children: [],
             },
           ],
           '/en/developers/': [
-            {
-              text: 'Ethereum',
-              collapsible: true,
-              children:[
-                '/en/developers/ethereum/introductions/README.md',
-                '/en/developers/ethereum/contracts/README.md',
-                '/en/developers/ethereum/api/README.md',
-                '/en/developers/ethereum/api/Hardware.md',
-              ]
-            },
-            {
-              text: 'Mina',
-              collapsible: true,
-              children:[
-                '/en/developers/mina/api/README.md',
-              ]
-            },
-            {
-              text: 'PlatON',
-              collapsible: true,
-              children:[
-                '/en/developers/platon/api/README.md',
-              ]
-            }
           ],
         }
       },
@@ -177,7 +121,7 @@ module.exports = {
           },
           {
             text: '官方网站',
-            link: 'https://www.kelepool.com'
+            link: 'https://www.tbird.ai'
           },
         ],
         sidebar:{
@@ -202,49 +146,15 @@ module.exports = {
             {
               text: '百科',
               children: [
-                '/zh/wiki/platform.md',
-                '/zh/wiki/pos/staking-intro.md',
-                '/zh/wiki/pos/staking-guide.md',
-                '/zh/wiki/pos/staking-difference.md',
-                '/zh/wiki/pos/knowledge.md',
-                '/zh/wiki/pos/kelepool.md',
-                '/zh/wiki/pos/merge.md',
-                '/zh/wiki/pos/fork.md',
-                '/zh/wiki/pos/aleo.md'
               ],
             },
           ],
           '/zh/developers/': [
-            {
-              text: 'Ethereum',
-              collapsible: true,
-              children:[
-                '/zh/developers/ethereum/introductions/README.md',
-                '/zh/developers/ethereum/contracts/README.md',
-                '/zh/developers/ethereum/api/README.md',
-                '/zh/developers/ethereum/api/Hardware.md'
-              ]
-            },
-            {
-              text: 'Mina',
-              collapsible: true,
-              children:[
-                '/zh/developers/mina/api/README.md',
-              ]
-            },
-            {
-              text: 'PlatON',
-              collapsible: true,
-              children:[
-                '/zh/developers/platon/api/README.md',
-              ]
-            }
           ],
         }
       },
     },
-
-  }),
+  ),
   markdown: {
     extendMarkdown: md => {
       md.use(require('markdown-it-include'), {
@@ -262,7 +172,7 @@ module.exports = {
     registerComponentsPlugin({
       componentsDir: path.resolve(__dirname, './components'),
     }),
-    sitemapPlugin({hostname: "https://docs.kelepool.com",}),
+    sitemapPlugin({hostname: "https://docs.tbird.ai",}),
     searchPlugin({
       locales: {
         '/': {
