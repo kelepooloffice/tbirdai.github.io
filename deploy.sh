@@ -10,7 +10,7 @@ npm run build
 cd src/.vuepress/dist
 
 # if you are deploying to a custom domain
-echo 'docs.kelepool.com' > CNAME
+echo 'docs.tbird.ai' > CNAME
 
 git init
 git add -A
@@ -20,6 +20,6 @@ git commit -m 'deploy'
 # git push -f git@github.com:<USERNAME>/<USERNAME>.github.io.git master
 
 # if you are deploying to https://<USERNAME>.github.io/<REPO>
-git push -f git@github.com:kelepool/docs.kelepool.com.git master:gh-pages
+git push -f git@github.com:tbirdai/docs.tbird.ai.git master:gh-pages
 
 cd -
