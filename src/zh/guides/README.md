@@ -1,18 +1,11 @@
 # Table of contents
 
-## PoW矿池挖矿 <a href="#pow" id="pow"></a>
+## 入门教程 <a href="#pow" id="pow"></a>
 
-* [📘 新手入门](README.md)
-  * [账户注册及登录](pow/how-to-mining/zhang-hu-zhu-ce-ji-deng-lu.md)
-  * [添加挖矿子账户](pow/how-to-mining/account.md)
-  * [设置收款地址及起付额度](pow/how-to-mining/collection.md)
-  * [设置算力报警](pow/how-to-mining/warning.md)
-  * [支持的币种](<pow/how-to-mining/Supported currency.md>)
-  * [查看算力、矿机情况](pow/how-to-mining/cha-kan-suan-li-kuang-ji-qing-kuang.md)
-  * [查看收益、支付状态](pow/how-to-mining/cha-kan-shou-yi-zhi-fu-zhuang-tai.md)
-  * [自助提币](pow/how-to-mining/zi-zhu-ti-bi.md)
-  * [创建、修改、删除观察者地址](pow/how-to-mining/chuang-jian-xiu-gai-shan-chu-guan-cha-zhe-di-zhi.md)
-  * [邀请好友获取奖励](pow/how-to-mining/yao-qing-hao-you-huo-qu-jiang-li.md)
+* [📘 配置通知渠道](README.md)
+  * [配置钉钉](start/notification/dingtalk.md)
+  * [配置Discord](start/notification/discord.md)
+  * [配置Telegram](start/notification/telegram.md)
 * [🪜 矿梯使用教程](pow/ladder.md)
 * [🔑 匿名挖矿教程](pow/anonymous.md)
 * [📈 币种挖矿教程](pow/Mining/README.md)
