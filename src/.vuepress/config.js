@@ -136,6 +136,7 @@ module.exports = {
                     '/zh/guides/start/notification/dingtalk.md',
                     '/zh/guides/start/notification/discord.md',
                     '/zh/guides/start/notification/telegram.md',
+                    '/zh/guides/start/notification/slack.md',
                   ],
                 }
               ]
