@@ -9,28 +9,28 @@ const { sitemapPlugin } = require("vuepress-plugin-sitemap2");
 
 module.exports = {
   lang: 'zh-CN',
-  title: 'Kele Pool',
-  description: 'Kele Pool Documentation - Decentralised Proof of Stake Protocol',
+  title: 'TBird',
+  description: 'TBird Documentation - Web3 ecosystem data integration platform',
   head: [
     ['link', { rel: "shortcut icon", href: "/favicon.ico"}],
   ],
   locales: {
     '/': {
       lang: 'en-US',
-      title: 'Kele Pool',
-      description: 'Kele Pool Documentation - Decentralised Proof of Stake Protocol',
+      title: 'TBird',
+      description: 'TBird Documentation - Web3 ecosystem data integration platform',
       head: [
-        ['meta', { name: 'keywords', content: 'ETH2.0 Staking, Pos Staking, Pow Mining, Mina Staking, Platon Staking'}],
-        ['meta', { name: 'description', content: 'Kele Pool Documentation - Decentralised Proof of Stake Protocol'}],
+        ['meta', { name: 'keywords', content: 'TBird, Web3, Push Protocol'}],
+        ['meta', { name: 'description', content: 'TBird Documentation - Web3 ecosystem data integration platform'}],
       ],
     },
     '/zh/': {
       lang: 'zh-CN',
-      title: '可乐矿池',
-      description: '可乐矿池文档 - Pow & Pos 一站式质押管理平台',
+      title: 'TBird',
+      description: 'TBird文档 - Web3生态数据整合平台',
       head: [
-        ['meta', { name: 'keywords', content: 'ETH2.0 质押, Pos 质押, Pow 挖矿, Mina 质押, Platon 质押'}],
-        ['meta', { name: 'description', content: '可乐矿池文档 - Pow & Pos 一站式质押管理平台'}],
+        ['meta', { name: 'keywords', content: 'TBird, Web3, Push Protocol'}],
+        ['meta', { name: 'description', content: 'TBird文档 - Web3生态数据整合平台'}],
       ],
     },
   },
