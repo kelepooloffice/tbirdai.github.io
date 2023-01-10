@@ -8,5 +8,5 @@
 * [❓ 常见问题](pow/FAQ/README.md)
 
 ## 服务条款&隐私协议 <a href="#pow" id="pow"></a>
-  * [隐私协议](start/terms/privacy-policy.md)
   * [服务条款](start/terms/terms-of-service.md)
+  * [隐私协议](start/terms/privacy-policy.md)
