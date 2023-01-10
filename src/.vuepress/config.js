@@ -138,27 +138,12 @@ module.exports = {
                     '/zh/guides/start/notification/telegram.md',
                     '/zh/guides/start/notification/slack.md',
                   ],
-                }
-              ]
-            },
-          ]
-        },
-        sidebar:{
-          '/zh/guides/': [
-            {
-              text: '服务条款&隐私协议',
-              children: [
+                },
                 {
-                  text: '服务条款',
+                  text: '服务条款&隐私协议',
                   collapsible: true,
                   children:[
                     '/zh/guides/start/terms/terms-of-service.md',
-                  ],
-                },
-                {
-                  text: '隐私协议',
-                  collapsible: true,
-                  children:[
                     '/zh/guides/start/terms/privacy-policy.md',
                   ],
                 }
