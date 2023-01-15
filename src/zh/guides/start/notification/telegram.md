@@ -1,5 +1,5 @@
 # 配置Telegram
-
+**该教程同时适用Telegram移动端及PC端**
 ### 1. 搜索机器人名称 @TBirdbot
 ![搜索机器人名称](<../../.gitbook/assets/notification/telegram4.png>)
 
