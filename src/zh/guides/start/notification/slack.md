@@ -1,4 +1,5 @@
 # 配置Slack
+**PC添加教程**
 
 ### 1. 点击“添加Slack授权” 
 ![授权](<../../.gitbook/assets/notification/slack1.png>)
