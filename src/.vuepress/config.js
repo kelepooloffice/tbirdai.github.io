@@ -134,10 +134,13 @@ module.exports = {
               children:[
                 '/zh/guides/start/FAQ/introduce.md',
               ],
+            }
+            ],
             },
             {
               text: '入门教程',
-              children: [{
+              children: [
+              {
                 text: '使用教程',
                 collapsible: true,
                 children:[
