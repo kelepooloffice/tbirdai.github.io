@@ -127,8 +127,28 @@ module.exports = {
         sidebar:{
           '/zh/guides/': [
             {
+            text: 'TBird介绍',
+            children: [{
+              text: 'TBird介绍',
+              collapsible: true,
+              children:[
+                '/zh/guides/start/FAQ/introduce.md',
+              ],
+            },
+            {
               text: '入门教程',
-              children: [
+              children: [{
+                text: '使用教程',
+                collapsible: true,
+                children:[
+                  '/zh/guides/start/FAQ/sign.md',
+                  '/zh/guides/start/FAQ/bot.md',
+                  '/zh/guides/start/FAQ/track.md',
+                  '/zh/guides/start/FAQ/series.md',
+                  '/zh/guides/start/FAQ/message.md',
+                  '/zh/guides/start/FAQ/invite.md',
+                ],
+              },
                 {
                   text: '配置通知渠道',
                   collapsible: true,
