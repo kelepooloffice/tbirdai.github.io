@@ -1,0 +1,1 @@
+const t=JSON.parse('{"key":"v-f472b514","path":"/zh/guides/start/FAQ/","title":"\u{1F4D7} \u4F7F\u7528\u8BF4\u660E","lang":"zh-CN","frontmatter":{"description":"\u60A8\u53EF\u901A\u8FC7\u8FD9\u91CC\u4E86\u89E3\u5982\u4F55\u4F7F\u7528TBird"},"excerpt":"","headers":[],"git":{},"filePathRelative":"zh/guides/start/FAQ/README.md"}');export{t as data};
